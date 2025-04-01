@@ -12,15 +12,17 @@ Using violation records from the given datasets, we aim to provide actionable in
 - [Property Assessment Dataset](https://data.boston.gov/dataset/property-assessment)
 - [Live Street Address Management Dataset](https://data.boston.gov/dataset/live-street-address-management-sam-addresses)
 
-### How to use
+### Project Blueprint: Making Sense of the Notebooks
 
-* The public works violations dataset can be cleaned using PWV_Cleaning python notebook file. This would save a PWV_processed.csv.
+* The 'Public Works Violations' dataset can be cleaned using PWV_Cleaning.ipynb notebook. This will generate a processed file named PWV_processed.csv.
 
-* This PWV_processed.csv file can be used in TDS_Midterm_Clustering_EDA_6.ipynb to get the answers for the questions. The location plots can be replicated by running DS_Midterm_Clustering_EDA_6 and boston_violations_map files with the same processed file.
+* The generated PWV_processed.csv file should be loaded to TDS_Midterm_Clustering_EDA_6.ipynb to replicate our analysis and answer key questions discussed in "Insights" section. 
 
-* The insights from Building and Property Violations can be replicated by downloading the dataset and passing it through the Property_Violations notebook.
+* The location plots can be created for visualization by running DS_Midterm_Clustering_EDA_6.ipynb and boston_violations_map.ipynb files with the same processed data.
 
-* Our initial model results can be replicated by using the init_pred_modelling file. 
+* Download the 'Building and Property Violations' dataset and run it through the Property_Violations.ipynb notebook to obtain a preprocessed dataset and draw insights of data distribution.
+
+* Our baseline model results can be reproduced using the init_pred_modelling.ipynb file.
 
 ### Data preprocessing
 We performed data cleaning and preprocessing for three different datasets corresponding to different analytical objectives.
