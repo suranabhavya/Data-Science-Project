@@ -80,14 +80,14 @@ It just looked like all violations take place in all the places. When plotted to
 2. We then tried to answer a couple of questions regarding the Public Works Violations dataset:
     
     * Q: Which address has the most repeated violations? A: 74 Clarendon ST Suite A
-        ![Properties with violations](images\add_with_rep_violations.png)
+        ![Properties with violations](images/add_with_rep_violations.png)
 
     * Q: Which zipcode has the most violations? A: 02127
-        ![Zipcodes with violations](images\zipcode_pwv.png)    
+        ![Zipcodes with violations](images/zipcode_pwv.png)    
 
     * Q: Which is the most common violation? A: Improper trash disposal
 
-        ![Top violations](images\top_Complaints_pwv.png)
+        ![Top violations](images/top_Complaints_pwv.png)
 
 
 
@@ -95,10 +95,10 @@ It just looked like all violations take place in all the places. When plotted to
 
 4. We also did some initial analysis on Building and Property Works Violations dataset, we observed that most of the violations were related to 'mechanical execution of work' and Dorchester was the place with most violations.
 
-![Top violations in Building and Property](images\top_Complaints_pnbv.png)
+![Top violations in Building and Property](images/top_Complaints_pnbv.png)
 
 
-![Top violation cities in Building and Property](images\top_violationCities_pnbv.png)
+![Top violation cities in Building and Property](images/top_violationCities_pnbv.png)
 
 
 ### Preliminary results
