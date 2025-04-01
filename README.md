@@ -1,5 +1,8 @@
 # Data-Science-Project
 
+##Mid-Term Presentation
+https://youtu.be/n2QhbOy2V7o 
+
 ## Boston Housing Violations Analysis
 ### Description
 The project's aim is to analyze different violations around the city of Boston and identify systemic issues and trends.
@@ -74,12 +77,14 @@ We performed data cleaning and preprocessing for three different datasets corres
 
 ### Current Insights
 
-1. We were able to answer a a few key questions regarding the Public Works Violations dataset:
+1. We were able to answer a few key questions regarding the Public Works Violations dataset:
     
     * Q: Which address has the most repeated violations? A: 74 Clarendon ST Suite A
+    
         ![Properties with violations](images/add_with_rep_violations.png)
 
     * Q: Which zipcode has the most violations? A: 02127
+    
         ![Zipcodes with violations](images/zipcode_pwv.png)    
 
     * Q: Which is the most common violation? A: Improper trash disposal
@@ -89,27 +94,32 @@ We performed data cleaning and preprocessing for three different datasets corres
 
 2. As part of our analysis, we explored clustering the violation descriptions from the Public Works Violations dataset into broader categories as a step towards downstream multiclass classification. Although the results were not definitive, hierarchical clustering applied to the t-SNE components of the description embeddings produced the most promising grouping results.
 
-3. The preliminary analysis on the Building and Property Violations dataset revealed that the majority of violations were related to "mechanical execution of work." Additionally, Dorchester emerged as the neighborhood with the highest number of recorded violations.
+3. The preliminary analysis on the Building and Property Violations dataset revealed that the majority of violations were related to "mechanical execution of work".
 
 ![Top violations in Building and Property](images/top_Complaints_pnbv.png)
 
+    Additionally, Dorchester emerged as the neighborhood with the highest number of recorded violations.
 
 ![Top violation cities in Building and Property](images/top_violationCities_pnbv.png)
 
-5. Heatmaps of building violations provide a powerful visual insight into spatial patterns and help identify hotspots where violations are most frequent. By grouping violation data based on geographic coordinates and applying a weighted color gradient, we can quickly discern areas that require urgent attention. In our analysis, we preprocessed the data by ensuring accurate latitude and longitude values, grouped the records by location, and calculated the number of violations at each point. We then used the Folium library to overlay a heatmap on a base map of Boston, highlighting areas with high densities of violations. This method not only reveals overall trends but also enables us to focus on specific addresses; for instance, locations like "Dorchester", "Roxbury" emerged as significant hotspots, suggesting that these buildings or neighborhoods might be facing chronic compliance issues. This location-based insight supports targeted enforcement and more efficient allocation of resources for building safety improvements.
+4. Heatmaps of building violations offer valuable visual insights into spatial distribution patterns, helping identify hotspots where violations are most concentrated. By grouping violation data by geographic coordinates and applying a weighted color gradient, we can quickly pinpoint areas that may require urgent attention.
+
+    * In our analysis, we began by preprocessing the data to ensure the accuracy of latitude and longitude values. We then aggregated the records by location and computed the number of violations at each point. 
+    * Using the Folium library, we overlaid a heatmap on a base map of Boston to visualize violation density across the city.
+    * This approach revealed both citywide trends and specific high-risk areas. Notably, neighborhoods such as Dorchester and Roxbury emerged as significant hotspots, indicating potential long-term compliance issues in these locations. These insights can inform targeted enforcement efforts and guide the more efficient allocation of resources for improving building safety.
 
 ![Heatmap](images/heatmap.png)
 
 ![Pinpoint Info](images/pinpoint_info.png)
 
-5. We attempted to visualize violations by mapping them to their geographic locations to identify whether certain areas had a higher concentration of specific types of violations. However, this analysis did not yield meaningful insights.
+5. We attempted to visualize violations by mapping them to their geographic locations to identify whether certain areas had a higher concentration of specific types of violations.
 
-The spatial distribution appeared uniform as violations of all types seemed to occur across all regions. When all violation types were plotted together, trash-related violations overwhelmingly dominated the map due to their high frequency. When plotted separately by category, the violations either appeared too sparse to identify patterns or too dense to differentiate meaningfully.
+    The spatial distribution appeared uniform as violations of all types seemed to occur across all regions. When all violation types were plotted together, trash-related violations overwhelmingly dominated the map due to their high frequency. When plotted separately by category, the violations either appeared too sparse to identify patterns or too dense to differentiate meaningfully.
 
 ### Preliminary results
-On our modified public assessment dataset, we tried to fit a RandomForestClassifer, where we achieved a decent result of 86% accuracy and a weighted F1 score of 0.83. But the precision and recall for the violations class were pretty low, which can be explained by the skewed distribution of the dataset.
+Using our modified Public Assessment dataset, we trained a Random Forest Classifier, achieving an accuracy of 86% and a weighted F1 score of 0.83. However, the precision and recall for the violations class were relatively low, likely due to the skewed distribution of the dataset.
 
-Our goal would be to rectify the class imbalance by using undersampling techinques or some kind of weighted sampling technique. We also want to try using XGBoost with weighted classes.
+To address this issue, our next steps involve experimenting with techniques to mitigate class imbalance. This includes exploring undersampling methods or implementing weighted sampling strategies like SMOTE. Additionally, we plan to evaluate XGBoost with class weights to potentially improve performance on the minority class.
 
 
 ### Next Steps
