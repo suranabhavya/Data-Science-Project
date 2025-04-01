@@ -3,7 +3,7 @@
 ## Boston Housing Violations Analysis
 ### Description
 The project's aim is to analyze different violations around the city of Boston and identify systemic issues and trends.
-Using violation records from the given datasets, we aim to provide actionable insights to improve hosuing quality.
+Using violation records from the given datasets, we aim to provide actionable insights to improve housing quality.
 
 ### Goal(s)
 1. Identify clusters of chronic housing vialoations and correlate them with:
@@ -13,7 +13,7 @@ Using violation records from the given datasets, we aim to provide actionable in
 2. Tax Prediction, Value Prediction, property condition clustering for Property assessment Dataset
 
 ### Data preprocessing
-We did preprocessing of the datatsets for threee different tasks/datasets:
+We performed data cleaning and preprocessing for three different datasets corresponding to different analytical objectives.
 
 1. Building and Property Violations
 
@@ -36,13 +36,14 @@ We did preprocessing of the datatsets for threee different tasks/datasets:
 
     * The 'description' and 'code' had sub classes, so we clubbed them into a single one to make it simpler.
 
+            Before:
             10a -> ['Illegal dumping park']
         
             10b -> ['Illegal dumping 1-5 cuyd.']
         
             10c -> ['Illegal dumping 5 cubic yd.']
 
-            to 
+            After:
             
             10 -> ['Illegal dumping']
     
