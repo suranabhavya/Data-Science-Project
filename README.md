@@ -100,6 +100,11 @@ It just looked like all violations take place in all the places. When plotted to
 
 ![Top violation cities in Building and Property](images/top_violationCities_pnbv.png)
 
+5. Heatmaps of building violations provide a powerful visual insight into spatial patterns and help identify hotspots where violations are most frequent. By grouping violation data based on geographic coordinates and applying a weighted color gradient, we can quickly discern areas that require urgent attention. In our analysis, we preprocessed the data by ensuring accurate latitude and longitude values, grouped the records by location, and calculated the number of violations at each point. We then used the Folium library to overlay a heatmap on a base map of Boston, highlighting areas with high densities of violations. This method not only reveals overall trends but also enables us to focus on specific addresses; for instance, locations like "Dorchester", "Roxbury" emerged as significant hotspots, suggesting that these buildings or neighborhoods might be facing chronic compliance issues. This location-based insight supports targeted enforcement and more efficient allocation of resources for building safety improvements.
+
+![Heatmap](images/heatmap.png)
+
+![Pinpoint Info](images/pinpoint_info.png)
 
 ### Preliminary results
 On our modified public assessment dataset, we tried to fit a RandomForestClassifer, where we achieved a decent result of 86% accuracy and a weighted F1 score of 0.83. But the precision and recall for the violations class were pretty low, which can be explained by the skewed distribution of the dataset.
