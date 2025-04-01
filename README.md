@@ -5,12 +5,22 @@
 The project's aim is to analyze different violations around the city of Boston and identify systemic issues and trends.
 Using violation records from the given datasets, we aim to provide actionable insights to improve housing quality.
 
-### Goal(s)
-1. Identify clusters of chronic housing vialoations and correlate them with:
-- Property characteristics
-- Neighbourhoods/Communitites
--  and any other common features.
-2. Tax Prediction, Value Prediction, property condition clustering for Property assessment Dataset
+### Dataset(s)
+
+- [Public Works Violations Dataset](https://data.boston.gov/dataset/public-works-violations)
+- [Building and Property Violations Dataset](https://data.boston.gov/dataset/building-and-property-violations1)
+- [Property Assessment Dataset](https://data.boston.gov/dataset/property-assessment)
+- [Live Street Address Management Dataset](https://data.boston.gov/dataset/live-street-address-management-sam-addresses)
+
+### How to use
+
+* The public works violations dataset can be cleaned using PWV_Cleaning python notebook file. This would save a PWV_processed.csv.
+
+* This PWV_processed.csv file can be used in TDS_Midterm_Clustering_EDA_6.ipynb to get the answers for the questions. The location plots can be replicated by running DS_Midterm_Clustering_EDA_6 and boston_violations_map files with the same processed file.
+
+* The insights from Building and Property Violations can be replicated by downloading the dataset and passing it through the Property_Violations notebook.
+
+* Our initial model results can be replicated by using the init_pred_modelling file. 
 
 ### Data preprocessing
 We performed data cleaning and preprocessing for three different datasets corresponding to different analytical objectives.
@@ -59,28 +69,44 @@ We performed data cleaning and preprocessing for three different datasets corres
 
 
 
-### Dataset(s)
+### Current Insights
 
-- [Public Works Violations Dataset](https://data.boston.gov/dataset/public-works-violations)
-- [Building and Property Violations Dataset](https://data.boston.gov/dataset/building-and-property-violations1)
-- [Property Assessment Dataset](https://data.boston.gov/dataset/property-assessment)
-- [Live Street Address Management Dataset](https://data.boston.gov/dataset/live-street-address-management-sam-addresses)
-- Code Enforcement Violations (contains 8 lakh records across 60 violation description categories)
+1. We tried plotting the violations to their locations to see if we can get any insights about a particular area having an increased number of violations of a particular category. This didn't give us the results we hoped we would get.
+
+[insert image of heatmap and amogh's plots here]
+
+It just looked like all violations take place in all the places. When plotted together, trash related violations dominate the whole map as there are in a majority. When tried plotting separately, they were either too sparse or too dense.
+
+2. We then tried to answer a couple of questions regarding the Public Works Violations dataset:
+    
+    * Q: Which address has the most repeated violations? A: 74 Clarendon ST Suite A
+
+    * Q: Which zipcode has the most violations? A: 02127
+
+    * Q: Which is the most common violation? A: Improper trash disposal
+
+3. We also tried clustering different violation descriptions in this dataset into categories we could use for something like a multiclass classification. This wasn't perfect but using hierarchical clustering on the t-SNE components of the descriptions' embeddings gave us the best result for now.
+
+4. We also did some initial analysis on public works violations, we observed that most of the violations were related to 'mechanical execution of work' and Dorchester was the place with most violations.
+
+[insert muskan's images here]
+
+### Preliminary results
+On our modified public assessment dataset, we tried to fit a RandomForestClassifer, where we achieved a decent result of 86% accuracy and a weighted F1 score of 0.83. But the precision and recall for the violations class were pretty low, which can be explained by the skewed distribution of the dataset.
+
+Our goal would be to rectify the class imbalance by using undersampling techinques or some kind of weighted sampling technique. We also want to try using XGBoost with weighted classes.
 
 
-### Data Modelling
-We have 
+### Next Steps
 
-### Data Visualization
-Current plans for visualization are:
-- Heatmaps and 
-- Scatterplots to explore relationships between variables.
+1. We have tried to answer most of the base questions from the original project's document. But our insights feel a little incohesive at the moment. We need to try to get solid trends from the data.
 
-### Test plans
+2. Using the 'status_dttm', we should be able to get time data for the violations, using which we could get better insights like recurrence of violation, a specific rise in violations etc.
 
-The test plan is two try two different splits:
- 1. Time based split for temporal analysis validations, and
- 2. Randomized split for generalizability.
+3. See if we can find any other target variables that we can predict from the data available.
 
-We plan to use machine learning algorithms such as Linear Regression, Hierarchical clustering, Random Forest, CatBoost, and XGBoost, along with data science analytics tools.
+4. We are currently hindered by our lack of domain knowledge to impute a lot a null values. We need to find better ways.
 
+5. We need to do a better clean up of data's location attributes using Street Address Management dataset.
+
+6. A better organization of code.
