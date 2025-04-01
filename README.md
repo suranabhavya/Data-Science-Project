@@ -75,23 +75,31 @@ We performed data cleaning and preprocessing for three different datasets corres
 
 1. We tried plotting the violations to their locations to see if we can get any insights about a particular area having an increased number of violations of a particular category. This didn't give us the results we hoped we would get.
 
-[insert image of heatmap and amogh's plots here]
-
 It just looked like all violations take place in all the places. When plotted together, trash related violations dominate the whole map as there are in a majority. When tried plotting separately, they were either too sparse or too dense.
 
 2. We then tried to answer a couple of questions regarding the Public Works Violations dataset:
     
     * Q: Which address has the most repeated violations? A: 74 Clarendon ST Suite A
+        ![Properties with violations](images\add_with_rep_violations.png)
 
     * Q: Which zipcode has the most violations? A: 02127
+        ![Zipcodes with violations](images\zipcode_pwv.png)    
 
     * Q: Which is the most common violation? A: Improper trash disposal
 
+        ![Top violations](images\top_Complaints_pwv.png)
+
+
+
 3. We also tried clustering different violation descriptions in this dataset into categories we could use for something like a multiclass classification. This wasn't perfect but using hierarchical clustering on the t-SNE components of the descriptions' embeddings gave us the best result for now.
 
-4. We also did some initial analysis on public works violations, we observed that most of the violations were related to 'mechanical execution of work' and Dorchester was the place with most violations.
+4. We also did some initial analysis on Building and Property Works Violations dataset, we observed that most of the violations were related to 'mechanical execution of work' and Dorchester was the place with most violations.
 
-[insert muskan's images here]
+![Top violations in Building and Property](images\top_Complaints_pnbv.png)
+
+
+![Top violation cities in Building and Property](images\top_violationCities_pnbv.png)
+
 
 ### Preliminary results
 On our modified public assessment dataset, we tried to fit a RandomForestClassifer, where we achieved a decent result of 86% accuracy and a weighted F1 score of 0.83. But the precision and recall for the violations class were pretty low, which can be explained by the skewed distribution of the dataset.
