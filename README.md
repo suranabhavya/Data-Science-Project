@@ -119,7 +119,7 @@ We performed data cleaning and preprocessing for three different datasets corres
 ### Preliminary results
 Using our modified Public Assessment dataset, we trained a Random Forest Classifier, achieving an accuracy of 86% and a weighted F1 score of 0.83. However, the precision and recall for the violations class were relatively low, likely due to the skewed distribution of the dataset.
 
-To address this issue, our next steps involve experimenting with techniques to mitigate class imbalance. This includes exploring undersampling methods or implementing weighted sampling strategies like SMOTE. Additionally, we plan to evaluate XGBoost with class weights to potentially improve performance on the minority class.
+To address this issue, our next steps involve experimenting with techniques to mitigate class imbalance. This includes exploring undersampling/oversampling methods or implementing weighted sampling strategies. Additionally, we plan to evaluate XGBoost with class weights to potentially improve performance on the minority class.
 
 
 ### Next Steps
