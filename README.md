@@ -29,24 +29,24 @@ We performed data cleaning and preprocessing for three different datasets corres
 
 1. Building and Property Violations
 
-    * We first check for null values and dropped the columns, 'value', 'violation_sthigh' and 'contact_addr2' as they had more than 70 percent null values.
+    * We began by checking for null values in the dataset. The columns 'value', 'violation_sthigh', and 'contact_addr2' were dropped as they contained over 70% missing values.
 
-    * Next, we then imputed 'description''s null values with 'Unknwown'.The description in this dataset contains the information about the type of violations We did not drop these as it was an important attribute and wanted to retain as much information as possible. We retained around 50% of the rows with null values by doing this.
+    * Next, we then imputed the null values in 'Description' column with 'Unknwown' value. This column provides valuable information about the type of violation, so we opted to retain it rather than drop the Null records. This allowed us to retain around 50% of the rows with atleast one null value.
 
-    * We dropped the rest of the rows, around 300 out of 16591, which had null values. 
+    * We dropped the remaining rows with missing values, around 300 out of 16591 entries. 
 
-    * We then removed the duplicate rows. These were 16 rows.
+    * Duplicate rows (16 in total) were also identified and removed.
     
-    * We dropped status_dttm (information about the time of violation) and location(redundant information)
+    * Additionally, we dropped the 'status_dttm' column, which contained timestamp information that was not relevant for our current analysis, and the 'location' column due to information redundancy.
     
-    * We also binary encoded status.
+    * Finally, we applied binary encoding to the 'status' column for further processing.
 
 2. Public Works Violations Dataset
-    * This is almost the same exact procedure as above. These two datasets have almost similar columns, with different values. 
+    * The preprocessing steps for this dataset were mostly similar to those applied to the Building and Property Violations dataset, as both share a similar structure but contain different values.
 
-    * We first dropped the attributes ('violation_sthigh', 'contact_addr2', 'violation_state', 'contact_zip', 'contact_state', 'contact_city', 'violation_suffix', 'ticket_no'). Out of these some had a considerable amount of null values while the rest seemed redundant at this moment.
+    * We began by dropping several attributes, namely 'violation_sthigh', 'contact_addr2', 'violation_state', 'contact_zip', 'contact_state', 'contact_city', 'violation_suffix' and 'ticket_no'. Some of these had a significant number of missing values, while others were deemed redundant at this stage.
 
-    * The 'description' and 'code' had sub classes, so we clubbed them into a single one to make it simpler.
+    * The 'description' and 'code' columns contained subcategories, so we consolidated into broader categories to simplify the dataset.
 
             Before:
             10a -> ['Illegal dumping park']
@@ -56,14 +56,14 @@ We performed data cleaning and preprocessing for three different datasets corres
             10c -> ['Illegal dumping 5 cubic yd.']
 
             After:
-            
             10 -> ['Illegal dumping']
     
 3. Public Assessment Dataset
 
-    * Here, we wanted to see if we can use the building details available to train a classifier to predict for a violation.
+    * For this dataset, our current goal was to explore whether building characteristics could be used to train a classifier to predict the likelihood of a violation.
 
-    * So we first concatenated the Public Works Violation Dataset to Property Assessment Dataset. The Public Works Violation and Street Address Management Dataset have a common attribute 'sam_id' == 'SAM_ADDRESS_ID'. Street Address Management dataset and Property Assessment Dataset have a common attribute ('PARCEL' == 'PID'). So based on this connection we added new attribute to Property Assessment Dataset, 'violation_bool' which is 1 if the corresponding 'PID' has a violation recorded, else 0.
+    * To enable this, we merged the Public Works Violations dataset with the Property Assessment dataset. The linkage was established through the Street Address Management dataset.
+     The Public Works Violation and Street Address Management Dataset have a common attribute 'sam_id' == 'SAM_ADDRESS_ID'. Street Address Management dataset and Property Assessment Dataset have a common attribute ('PARCEL' == 'PID'). So based on this connection we added new attribute to Property Assessment Dataset, 'violation_bool' which is 1 if the corresponding 'PID' has a violation recorded, else 0.
 
     * We then did the usual data cleaning. We dropped attributes with a considerable amount of null values. We also then dropped the location based attributes, because our experiments on location didnt provide us with any insights (discussed in the next section).
 
