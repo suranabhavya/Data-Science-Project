@@ -62,22 +62,19 @@ We performed data cleaning and preprocessing for three different datasets corres
 
     * For this dataset, our current goal was to explore whether building characteristics could be used to train a classifier to predict the likelihood of a violation.
 
-    * To enable this, we merged the Public Works Violations dataset with the Property Assessment dataset. The linkage was established through the Street Address Management dataset.
-     The Public Works Violation and Street Address Management Dataset have a common attribute 'sam_id' == 'SAM_ADDRESS_ID'. Street Address Management dataset and Property Assessment Dataset have a common attribute ('PARCEL' == 'PID'). So based on this connection we added new attribute to Property Assessment Dataset, 'violation_bool' which is 1 if the corresponding 'PID' has a violation recorded, else 0.
+    * To enable this, we merged the Public Works Violations dataset with the Property Assessment dataset. The linkage was established through the Street Address Management dataset. 
+    
+    * The attribute 'sam_id' from the Public Works dataset corresponds to 'SAM_ADDRESS_ID' in the Street Address Management dataset. The attribute 'PARCEL' from the Street Address Management dataset corresponds to 'PID' in the Property Assessment dataset. Based on this connection we added new attribute to Property Assessment Dataset, 'violation_bool' has value 1 if the corresponding 'PID' has a violation recorded, else 0.
 
-    * We then did the usual data cleaning. We dropped attributes with a considerable amount of null values. We also then dropped the location based attributes, because our experiments on location didnt provide us with any insights (discussed in the next section).
+    * As part of standard data cleaning process, we dropped attributes with a considerable amount of null values. We also removed location-based attributes which were not useful for current analysis objectives.
 
-    * We then imputed values for 'FULL_BTH', 'HLF_BTH', 'KITCHENS', 'FIREPLACES', as they seemed important for predicting violations, and then dropped the remaining null value rows.  
+    * Finally, we imputed missing values for key attributes such as 'FULL_BTH', 'HLF_BTH', 'KITCHENS', and 'FIREPLACES', which we considered potentially important for predicting violations. Any remaining rows with null values were then removed.
 
 
 
 ### Current Insights
 
-1. We tried plotting the violations to their locations to see if we can get any insights about a particular area having an increased number of violations of a particular category. This didn't give us the results we hoped we would get.
-
-It just looked like all violations take place in all the places. When plotted together, trash related violations dominate the whole map as there are in a majority. When tried plotting separately, they were either too sparse or too dense.
-
-2. We then tried to answer a couple of questions regarding the Public Works Violations dataset:
+1. We were able to answer a a few key questions regarding the Public Works Violations dataset:
     
     * Q: Which address has the most repeated violations? A: 74 Clarendon ST Suite A
         ![Properties with violations](images/add_with_rep_violations.png)
@@ -90,10 +87,9 @@ It just looked like all violations take place in all the places. When plotted to
         ![Top violations](images/top_Complaints_pwv.png)
 
 
+2. As part of our analysis, we explored clustering the violation descriptions from the Public Works Violations dataset into broader categories as a step towards downstream multiclass classification. Although the results were not definitive, hierarchical clustering applied to the t-SNE components of the description embeddings produced the most promising grouping results.
 
-3. We also tried clustering different violation descriptions in this dataset into categories we could use for something like a multiclass classification. This wasn't perfect but using hierarchical clustering on the t-SNE components of the descriptions' embeddings gave us the best result for now.
-
-4. We also did some initial analysis on Building and Property Works Violations dataset, we observed that most of the violations were related to 'mechanical execution of work' and Dorchester was the place with most violations.
+3. The preliminary analysis on the Building and Property Violations dataset revealed that the majority of violations were related to "mechanical execution of work." Additionally, Dorchester emerged as the neighborhood with the highest number of recorded violations.
 
 ![Top violations in Building and Property](images/top_Complaints_pnbv.png)
 
@@ -105,6 +101,10 @@ It just looked like all violations take place in all the places. When plotted to
 ![Heatmap](images/heatmap.png)
 
 ![Pinpoint Info](images/pinpoint_info.png)
+
+5. We attempted to visualize violations by mapping them to their geographic locations to identify whether certain areas had a higher concentration of specific types of violations. However, this analysis did not yield meaningful insights.
+
+The spatial distribution appeared uniform as violations of all types seemed to occur across all regions. When all violation types were plotted together, trash-related violations overwhelmingly dominated the map due to their high frequency. When plotted separately by category, the violations either appeared too sparse to identify patterns or too dense to differentiate meaningfully.
 
 ### Preliminary results
 On our modified public assessment dataset, we tried to fit a RandomForestClassifer, where we achieved a decent result of 86% accuracy and a weighted F1 score of 0.83. But the precision and recall for the violations class were pretty low, which can be explained by the skewed distribution of the dataset.
