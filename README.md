@@ -264,6 +264,10 @@ Undersampling helped when recall was mission-critical but significantly harmed p
 Using the processed Public Works Violations dataset, we tried to model a anomaly detection model using KMeans.
 We grouped the violations based on ZIP code, month and used KMeans clustering to model what a "typical" month looks like in each ZIP. ZIP-months with violation patterns far from their cluster centroids were considered anomalous.
 
+        A thing to keep in mind, we excluded the trash violations, because they comprised more than half of the dataset skewing our results. 
+        
+(Boston has a trash problem [1](https://www.nbcboston.com/news/local/can-steeper-fines-fix-bostons-rat-problem/3591339/) [2](https://www.boston.com/news/local-news/2022/10/26/uncovered-trash-has-made-for-easy-feasting-for-rodents-now-boston-officials-are-looking-to-end-the-rat-buffet/))
+
  **Features used:**
 - ZIP code
 - Violation description (one-hot encoded)
@@ -283,18 +287,12 @@ We grouped the violations based on ZIP code, month and used KMeans clustering to
 
 **Real-World Correlations:**
 
-- **July 2010 (ZIP 2124)**: Protest against immigration laws in Boston
-- **Oct 2009 (ZIP 2131)**: Early Nor’easter snowstorm
-- **May 2017 (ZIP 2126)**: Boston Calling festival & cultural events
-- **Feb 2021 (ZIPs 2127/2135)**: Virtual Black History Month programs (this may not compleetely address this, but this was something we found that might be related.)
+- **July 2010 (ZIP 2124)**: Protest against immigration laws in Boston [article](https://www.wbur.org/news/2010/07/11/immigration-protest)
+- **Oct 2009 (ZIP 2131)**: Early Nor’easter snowstorm [article](https://www.wbur.org/news/2009/10/19/october-snow)
+- **May 2017 (ZIP 2126)**: Boston Calling festival & cultural events [article](https://www.msgentertainment.com/boston-calling-music-festival-announces-its-2017-lineup-headlined-by-tool-mumford-sons-and-chance-the-rapper/)  
+
 
 These events may explain sharp deviations in violation behavior from the usual patterns.
-
-#### Key Takeaways
-
-- Property type, ownership, and condition help predict violation risk
-- Temporal patterns in violations are not random — external events, seasonal behavior, or policy changes leave detectable footprints
-- Combining city-level data with unsupervised modeling surfaces both routine and unusual public behavior
 
 
 ### Next Steps
