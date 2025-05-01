@@ -117,7 +117,7 @@ We performed data cleaning and preprocessing for three different datasets corres
     The spatial distribution appeared uniform as violations of all types seemed to occur across all regions. When all violation types were plotted together, trash-related violations overwhelmingly dominated the map due to their high frequency. When plotted separately by category, the violations either appeared too sparse to identify patterns or too dense to differentiate meaningfully.
 
 ### Preliminary results
-#### Binary Violation Prediction
+#### 1. Binary Violation Prediction
 
 We used features from the Boston Public Assessment Dataset to predict whether a property is likely to incur a public works violation.
  * Hypothesis: 
@@ -225,8 +225,7 @@ We framed this as a **binary classification** problem.
         |------------------|-------------------------|-----------------------|
         | **Actual: No Violation** | 22,208                  | 8,400                 |
         | **Actual: Violation**     | 310                     | 5,771                 |
-            [[22208  8400]
-            [  310  5771]]
+  
 
     * Classification Report:
 
@@ -260,6 +259,42 @@ Class-weighted **Logistic Regression with scaling** provided the best overall ba
 
 Undersampling helped when recall was mission-critical but significantly harmed precision.
 
+#### 2. Anomaly detection based on time and location
+
+Using the processed Public Works Violations dataset, we tried to model a anomaly detection model using KMeans.
+We grouped the violations based on ZIP code, month and used KMeans clustering to model what a "typical" month looks like in each ZIP. ZIP-months with violation patterns far from their cluster centroids were considered anomalous.
+
+ **Features used:**
+- ZIP code
+- Violation description (one-hot encoded)
+- Year and month (aggregated)
+- Trash-related violations were excluded to reduce skew
+
+**Top Anomalous ZIP-Months:**
+
+        | ZIP     | Year-Month | Anomaly Score |
+        |---------|------------|----------------|
+        | 2124.0  | 2010-07    | 55.5           |
+        | 2131.0  | 2009-10    | 51.5           |
+        | 2126.0  | 2017-05    | 47.5           |
+        | 2127.0  | 2021-02    | 38.7           |
+        | 2135.0  | 2021-02    | 38.3           |
+
+
+**Real-World Correlations:**
+
+- **July 2010 (ZIP 2124)**: Protest against immigration laws in Boston
+- **Oct 2009 (ZIP 2131)**: Early Nor’easter snowstorm
+- **May 2017 (ZIP 2126)**: Boston Calling festival & cultural events
+- **Feb 2021 (ZIPs 2127/2135)**: Virtual Black History Month programs (this may not compleetely address this, but this was something we found that might be related.)
+
+These events may explain sharp deviations in violation behavior from the usual patterns.
+
+#### Key Takeaways
+
+- Property type, ownership, and condition help predict violation risk
+- Temporal patterns in violations are not random — external events, seasonal behavior, or policy changes leave detectable footprints
+- Combining city-level data with unsupervised modeling surfaces both routine and unusual public behavior
 
 
 ### Next Steps
