@@ -117,9 +117,149 @@ We performed data cleaning and preprocessing for three different datasets corres
     The spatial distribution appeared uniform as violations of all types seemed to occur across all regions. When all violation types were plotted together, trash-related violations overwhelmingly dominated the map due to their high frequency. When plotted separately by category, the violations either appeared too sparse to identify patterns or too dense to differentiate meaningfully.
 
 ### Preliminary results
-Using our modified Public Assessment dataset, we trained a Random Forest Classifier, achieving an accuracy of 86% and a weighted F1 score of 0.83. However, the precision and recall for the violations class were relatively low, likely due to the skewed distribution of the dataset.
+#### Binary Violation Prediction
 
-To address this issue, our next steps involve experimenting with techniques to mitigate class imbalance. This includes exploring undersampling/oversampling methods or implementing weighted sampling strategies. Additionally, we plan to evaluate XGBoost with class weights to potentially improve performance on the minority class.
+We used features from the Boston Public Assessment Dataset to predict whether a property is likely to incur a public works violation.
+ * Hypothesis: 
+ Certain features might correlate with violations:
+- **Building type**: Apartments may be more prone to violations.
+- **Owner occupancy**: Properties where the owner doesn't reside may be less well-maintained.
+
+We framed this as a **binary classification** problem.
+
+
+1. Logistic Regression: 
+
+    **With class weighting (no sampling):**
+
+
+    * Confusion Matrix:
+        
+        |                  | Predicted: No Violation | Predicted: Violation |
+        |------------------|-------------------------|-----------------------|
+        | **Actual: No Violation** | 27,506                  | 3,102                 |
+        | **Actual: Violation**     | 405                     | 5,676                 |
+
+
+    * Classification Report:
+
+        | Class                 | Precision | Recall | F1-Score | Support |
+        |-----------------------|-----------|--------|----------|---------|
+        | **0 (No Violation)**  | 0.99      | 0.90   | 0.94     | 30,608  |
+        | **1 (Violation)**     | 0.65      | 0.93   | 0.76     | 6,081   |
+        | **Accuracy**          |           |        | **0.90** | 36,689  |
+        | **Macro Avg**         | 0.82      | 0.92   | 0.85     | 36,689  |
+        | **Weighted Avg**      | 0.93      | 0.90   | 0.91     | 36,689  |
+
+
+
+    * Accuracy Score: 0.9044127667693314
+
+        **Insight:** High recall for violations (0.93) with reasonable precision (0.65). This was the best-balanced model.
+
+
+
+    **With undersampling:**
+
+
+    * Confusion Matrix:
+        
+        |                  | Predicted: No Violation | Predicted: Violation |
+        |------------------|-------------------------|-----------------------|
+        | **Actual: No Violation** | 23,882                  | 6,726                |
+        | **Actual: Violation**     | 2,735                     | 3,346                |
+
+
+    * Classification Report:
+
+        | Class                 | Precision | Recall | F1-Score | Support |
+        |-----------------------|-----------|--------|----------|---------|
+        | **0 (No Violation)**  | 0.90      | 0.78   | 0.83     | 30,608  |
+        | **1 (Violation)**     | 0.33      | 0.55   | 0.41     | 6,081   |
+        | **Accuracy**          |           |        | **0.74** | 36,689  |
+        | **Macro Avg**         | 0.61      | 0.67   | 0.62     | 36,689  |
+        | **Weighted Avg**      | 0.80      | 0.74   | 0.76     | 36,689  |
+
+
+    * Accuracy Score: 0.7421297936711276
+
+        **Insight:** Improved class balance, but precision for violations dropped significantly
+
+2. RandomForest Classifier: 
+
+    **With class weighting (no sampling):**
+
+
+    * Confusion Matrix:
+        
+        |                  | Predicted: No Violation | Predicted: Violation |
+        |------------------|-------------------------|-----------------------|
+        | **Actual: No Violation** | 29,749                  | 859              |
+        | **Actual: Violation**     | 3,243                     | 2,838                 |
+
+
+    * Classification Report:
+
+        | Class                 | Precision | Recall | F1-Score | Support |
+        |-----------------------|-----------|--------|----------|---------|
+        | **0 (No Violation)**  | 0.90      | 0.97   | 0.94     | 30,608  |
+        | **1 (Violation)**     | 0.77      | 0.47   | 0.58     | 6,081   |
+        | **Accuracy**          |           |        | **0.89** | 36,689  |
+        | **Macro Avg**         | 0.83      | 0.72   | 0.76     | 36,689  |
+        | **Weighted Avg**      | 0.88      | 0.89   | 0.88     | 36,689  |
+
+
+
+    * Accuracy Score: 0.8881953719098368
+
+        **Insight:** Prioritized precision for violations (0.77), but missed many actual violations (recall 0.47).
+
+
+
+    **With undersampling:**
+
+
+    * Confusion Matrix:
+        
+        |                  | Predicted: No Violation | Predicted: Violation |
+        |------------------|-------------------------|-----------------------|
+        | **Actual: No Violation** | 22,208                  | 8,400                 |
+        | **Actual: Violation**     | 310                     | 5,771                 |
+            [[22208  8400]
+            [  310  5771]]
+
+    * Classification Report:
+
+        | Class                 | Precision | Recall | F1-Score | Support |
+        |-----------------------|-----------|--------|----------|---------|
+        | **0 (No Violation)**  | 0.99      | 0.73   | 0.84     | 30,608  |
+        | **1 (Violation)**     | 0.41      | 0.95   | 0.57     | 6,081   |
+        | **Accuracy**          |           |        | **0.76** | 36,689  |
+        | **Macro Avg**         | 0.70      | 0.84   | 0.70     | 36,689  |
+        | **Weighted Avg**      | 0.89      | 0.76   | 0.79     | 36,689  |
+
+    * Accuracy Score: 0.7625991441576494
+
+        **Insight:** Extremely high recall (0.95) but over-flagged clean properties, reducing precision (0.41).
+
+
+####  Summary Table
+
+| Model                          | Accuracy | Recall (Class 1) | Precision (Class 1) | F1 (Class 1) |
+|--------------------------------|----------|------------------|---------------------|--------------|
+| Logistic Regression (balanced) | 0.904    | **0.93**         | 0.65                | **0.76**     |
+| Random Forest (balanced)       | 0.888    | 0.47             | **0.77**            | 0.58         |
+| Random Forest + Undersampling  | 0.763    | **0.95**         | 0.41                | 0.57         |
+| Logistic Regression + Undersampling | 0.742 | 0.55             | 0.33                | 0.41         |
+
+---
+
+#### Final Takeaway
+
+Class-weighted **Logistic Regression with scaling** provided the best overall balance for detecting violations, combining high recall and interpretability.  
+
+Undersampling helped when recall was mission-critical but significantly harmed precision.
+
 
 
 ### Next Steps
