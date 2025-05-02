@@ -78,10 +78,20 @@ We performed data cleaning and preprocessing for three different datasets corres
     In this phase, we analyzed the Property Assessment dataset independently (i.e., not in relation to violations) to explore its internal structure, completeness, and categorical distributions for modeling and insight generation.
 
     * Dropped Columns with more than 80% Missing Values: We removed highly sparse attributes such as 'ST_NUM2', 'MAIL_ADDRESSEE', 'RES_UNITS', 'COM_UNITS', 'RC_UNITS', 'STRUCTURE_CLASS', 'KITCHEN_STYLE2', 'KITCHEN_STYLE3', and 'BTHRM_STYLE3'. 
-    * After analysis, I found that the following columns, 'BTHRM_STYLE2', 'CD_FLOOR', 'CM_ID', and 'UNIT_NUM' were also not adding value so removed them as well. 
     
-    The column analysis below helped me determine its usefulness.
-![Analysis of Column](images/Style2.png)
+    * After analysis, I found that the following columns, 'BTHRM_STYLE2', 'CD_FLOOR', 'CM_ID', and 'UNIT_NUM' were also not adding value so removed them as well. The column analysis below helped me determine its usefulness.
+    
+        `BTHRM_STYLE1` (rows) vs `BTHRM_STYLE2` (columns)
+
+| BTHRM_STYLE1 \\ BTHRM_STYLE2 | L - Luxury | M - Modern | N - No Remodeling | S - Semi-Modern | NaN    |
+|------------------------------|------------|------------|-------------------|------------------|--------|
+| **L - Luxury**               | 4127       | 2663       | 3                 | 29               | 1198   |
+| **M - Modern**               | 91         | 37203      | 288               | 4305             | 21251  |
+| **N - No Remodeling**        | 0          | 185        | 2843              | 783              | 1930   |
+| **S - Semi-Modern**          | 12         | 2745       | 866               | 31031            | 23450  |
+| **NaN**                      | 0          | 0          | 1                 | 0                | 48441  |
+
+    
     
     * We parsed compound categorical fields like 'ROOF_COVER', 'KITCHEN_TYPE', 'INT_COND', 'HEAT_TYPE', etc. using string splits to separate codes from labels, and handled missing values by filling with 'NA' as the value.
     
@@ -109,7 +119,29 @@ We performed data cleaning and preprocessing for three different datasets corres
             
 ![Cleaned_Categorical_columns](images/Cat_cols.png)
     
-    * 
+    * Also, visualized the uniqueness of categorical columns and calculated their respective entropy to identify features that are most informative.
+
+![Unique Values](images/Unique_Cat_val.png)    
+
+![Entropy](images/Cat_entropy.png)
+
+    * The 'GROSS_TAX' column contained inconsistent string formats (like "$-"), which prevented numerical analysis. We standardized it by stripping whitespace, removing currency symbols and commas, and cast the cleaned strings to float for quantitative use.
+    
+    * Several numeric columns such as 'LAND_SF', 'LAND_VALUE', 'BLDG_VALUE', 'TOTAL_VALUE', and 'SFYI_VALUE' were originally stored as strings with embedded commas (e.g., "1,200"). We removed the commas and converted these columns to float to enable proper numerical computation and statistical analysis.
+    
+    * The 'GROSS_TAX' column, which we intend to use as our target variable, exhibited extreme right skewness due to a large number of low-tax entries and a few outliers with very high tax values (as seen in the original distribution). To address this, we applied a log(1 + x) transformation, which effectively compressed the range and normalized the distribution. This transformation is crucial for improving model performance and stability by reducing the influence of outliers and enabling better learning from mid-range tax values.
+    
+![Old_Tax](images/Target.png)
+
+![New_Tax](images/Target_tax.png)
+
+    * Similarly, applied log transformation on other important numerical columns.
+    
+![Numerical Columns](images/Log_trans.png)
+
+    * Finally, To capture temporal features relevant to property condition and valuation, we engineered two new columns: 'BUILDING_AGE' (calculated as current_year(2025) - 'YR_BUILT') and 'YEARS_SINCE_REMODEL' (calculated as current_year - 'YR_REMODEL'). The distribution of 'BUILDING_AGE' revealed a wide range, with distinct construction waves over time, while 'YEARS_SINCE_REMODEL' was right-skewed, indicating that most remodels occurred relatively recently. These engineered features provide valuable insight for both descriptive analysis and predictive modeling.
+    
+![New_Columns](images/New_col.png)
 
 ### Current Insights
 
