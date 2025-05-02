@@ -73,7 +73,43 @@ We performed data cleaning and preprocessing for three different datasets corres
 
     * Finally, we imputed missing values for key attributes such as 'FULL_BTH', 'HLF_BTH', 'KITCHENS', and 'FIREPLACES', which we considered potentially important for predicting violations. Any remaining rows with null values were then removed.
 
+4. Part2 - Public Assessment Dataset (Independent Exploration)
 
+    In this phase, we analyzed the Property Assessment dataset independently (i.e., not in relation to violations) to explore its internal structure, completeness, and categorical distributions for modeling and insight generation.
+
+    * Dropped Columns with more than 80% Missing Values: We removed highly sparse attributes such as 'ST_NUM2', 'MAIL_ADDRESSEE', 'RES_UNITS', 'COM_UNITS', 'RC_UNITS', 'STRUCTURE_CLASS', 'KITCHEN_STYLE2', 'KITCHEN_STYLE3', and 'BTHRM_STYLE3'. 
+    * After analysis, I found that the following columns, 'BTHRM_STYLE2', 'CD_FLOOR', 'CM_ID', and 'UNIT_NUM' were also not adding value so removed them as well. 
+    
+    The column analysis below helped me determine its usefulness.
+![Analysis of Column](images/Style2.png)
+    
+    * We parsed compound categorical fields like 'ROOF_COVER', 'KITCHEN_TYPE', 'INT_COND', 'HEAT_TYPE', etc. using string splits to separate codes from labels, and handled missing values by filling with 'NA' as the value.
+    
+            Before:
+            Col Name - PROP_VIEW
+            A - Average      111884
+            NaN               46679
+            G - Good          13086
+            F - Fair           6071
+            E - Excellent      4536
+            S - Special         667
+            P - Poor            522
+            Name: count, dtype: int64
+
+            After:
+            PROP_VIEW
+            A     111881
+            NA     46677
+            G      13086
+            F       6071
+            E       4536
+            S        667
+            P        522
+            Name: count, dtype: int64
+            
+![Cleaned_Categorical_columns](images/Cat_cols.png)
+    
+    * 
 
 ### Current Insights
 
