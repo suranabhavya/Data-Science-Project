@@ -93,7 +93,7 @@ We performed data cleaning and preprocessing for three different datasets corres
 
     
     
-    * We parsed compound categorical fields like 'ROOF_COVER', 'KITCHEN_TYPE', 'INT_COND', 'HEAT_TYPE', etc. using string splits to separate codes from labels, and handled missing values by filling with 'NA' as the value.
+* We parsed compound categorical fields like 'ROOF_COVER', 'KITCHEN_TYPE', 'INT_COND', 'HEAT_TYPE', etc. using string splits to separate codes from labels, and handled missing values by filling with 'NA' as the value.
     
             Before:
             Col Name - PROP_VIEW
@@ -119,27 +119,27 @@ We performed data cleaning and preprocessing for three different datasets corres
             
 ![Cleaned_Categorical_columns](images/Cat_cols.png)
     
-    * Also, visualized the uniqueness of categorical columns and calculated their respective entropy to identify features that are most informative.
+* Also, visualized the uniqueness of categorical columns and calculated their respective entropy to identify features that are most informative.
 
 ![Unique Values](images/Unique_Cat_val.png)    
 
 ![Entropy](images/Cat_entropy.png)
 
-    * The 'GROSS_TAX' column contained inconsistent string formats (like "$-"), which prevented numerical analysis. We standardized it by stripping whitespace, removing currency symbols and commas, and cast the cleaned strings to float for quantitative use.
+* The 'GROSS_TAX' column contained inconsistent string formats (like "$-"), which prevented numerical analysis. We standardized it by stripping whitespace, removing currency symbols and commas, and cast the cleaned strings to float for quantitative use.
     
-    * Several numeric columns such as 'LAND_SF', 'LAND_VALUE', 'BLDG_VALUE', 'TOTAL_VALUE', and 'SFYI_VALUE' were originally stored as strings with embedded commas (e.g., "1,200"). We removed the commas and converted these columns to float to enable proper numerical computation and statistical analysis.
+* Several numeric columns such as 'LAND_SF', 'LAND_VALUE', 'BLDG_VALUE', 'TOTAL_VALUE', and 'SFYI_VALUE' were originally stored as strings with embedded commas (e.g., "1,200"). We removed the commas and converted these columns to float to enable proper numerical computation and statistical analysis.
     
-    * The 'GROSS_TAX' column, which we intend to use as our target variable, exhibited extreme right skewness due to a large number of low-tax entries and a few outliers with very high tax values (as seen in the original distribution). To address this, we applied a log(1 + x) transformation, which effectively compressed the range and normalized the distribution. This transformation is crucial for improving model performance and stability by reducing the influence of outliers and enabling better learning from mid-range tax values.
+* The 'GROSS_TAX' column, which we intend to use as our target variable, exhibited extreme right skewness due to a large number of low-tax entries and a few outliers with very high tax values (as seen in the original distribution). To address this, we applied a log(1 + x) transformation, which effectively compressed the range and normalized the distribution. This transformation is crucial for improving model performance and stability by reducing the influence of outliers and enabling better learning from mid-range tax values.
     
 ![Old_Tax](images/Target.png)
 
 ![New_Tax](images/Target_tax.png)
 
-    * Similarly, applied log transformation on other important numerical columns.
+* Similarly, applied log transformation on other important numerical columns.
     
 ![Numerical Columns](images/Log_trans.png)
 
-    * Finally, To capture temporal features relevant to property condition and valuation, we engineered two new columns: 'BUILDING_AGE' (calculated as current_year(2025) - 'YR_BUILT') and 'YEARS_SINCE_REMODEL' (calculated as current_year - 'YR_REMODEL'). The distribution of 'BUILDING_AGE' revealed a wide range, with distinct construction waves over time, while 'YEARS_SINCE_REMODEL' was right-skewed, indicating that most remodels occurred relatively recently. These engineered features provide valuable insight for both descriptive analysis and predictive modeling.
+* Finally, To capture temporal features relevant to property condition and valuation, we engineered two new columns: 'BUILDING_AGE' (calculated as current_year(2025) - 'YR_BUILT') and 'YEARS_SINCE_REMODEL' (calculated as current_year - 'YR_REMODEL'). The distribution of 'BUILDING_AGE' revealed a wide range, with distinct construction waves over time, while 'YEARS_SINCE_REMODEL' was right-skewed, indicating that most remodels occurred relatively recently. These engineered features provide valuable insight for both descriptive analysis and predictive modeling.
     
 ![New_Columns](images/New_col.png)
 
@@ -362,6 +362,53 @@ We grouped the violations based on ZIP code, month and used KMeans clustering to
 
 These events may explain sharp deviations in violation behavior from the usual patterns.
 
+#### 3. Property Tax Prediction
+
+Using the cleaned Property Assessment dataset, we developed regression models to predict property gross tax values. The analysis focused on using both standard property features and their logarithmic transformations to achieve more accurate predictions.
+
+##### Data Preparation
+- We identified several missing values in key columns and addressed them using median imputation
+- The dataset had 21 categorical features that were one-hot encoded for modeling
+- Log transformations were applied to numerical values (GROSS_AREA, LIVING_AREA, LAND_VALUE, BLDG_VALUE, TOTAL_VALUE, SFYI_VALUE, GROSS_TAX) to normalize distributions and improve model performance
+- We engineered temporal features including BUILDING_AGE and YEARS_SINCE_REMODEL to capture property condition information
+
+##### Model Performance
+We evaluated several regression models:
+
+| Model | MSE | RMSE | MAE | R² |
+|-------|-----|------|-----|---|
+| Linear Regression | 0.0870 | 0.2949 | 0.1294 | 0.9899 |
+| Ridge Regression | 0.0869 | 0.2949 | 0.1294 | 0.9899 |
+| Lasso Regression | 2.3497 | 1.5329 | 1.0427 | 0.7264 |
+| Random Forest | 0.0018 | 0.0426 | 0.0036 | 0.9998 |
+| Gradient Boosting | 0.0047 | 0.0686 | 0.0271 | 0.9995 |
+
+The **Random Forest** model significantly outperformed all other models, achieving an R² score of 0.9998, indicating it explained nearly all the variance in the target variable (log-transformed gross tax).
+
+##### Feature Importance
+Analysis of the Random Forest model revealed the top predictive features:
+
+1. **LUC** (Land Use Code): By far the most important feature (importance: 0.86), indicating that property classification is the primary determinant of tax rates
+2. **LOG_TOTAL_VALUE**: The log-transformed total value of the property (importance: 0.07)
+3. **TOTAL_VALUE**: The raw total value of the property (importance: 0.07)
+
+Other features including land square footage, building type, and property age had much smaller contributions to the predictions.
+
+##### Visualization
+The scatter plot below shows the relationship between actual and predicted gross tax values using the Random Forest model:
+
+![Tax Prediction Results](images/tax_prediction_results.png)
+
+The model demonstrates excellent prediction capability across different tax ranges, with predictions closely following the ideal line (red dashed line), particularly in the lower tax ranges. The model performs slightly less accurately for very high-value properties, which is expected given their relative scarcity in the dataset.
+
+##### Conclusion
+The high predictive accuracy of the model suggests that property taxes in Boston follow a consistent, systematic pattern based primarily on the property's land use code and total value. The model could be useful for:
+
+- Property owners to estimate future tax obligations
+- City planners to understand tax revenue patterns
+- Policymakers to assess the impact of potential changes to tax structures
+
+The logarithmic transformation of the target variable proved essential for achieving high model performance, indicating that tax values follow a multiplicative rather than additive relationship with underlying property features.
 
 ### Next Steps
 
